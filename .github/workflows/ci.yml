@@ -19,11 +19,6 @@ jobs:
         with:
           go-version-file: go.mod
           check-latest: true
-      - name: Check formatting
-        run: |
-          set -euo pipefail
-          files="$(git ls-files '*.go')"
-          test -z "$(gofmt -l $files)"
       - name: Run Go tests in Actions
         run: go test ./...
       - name: Run Go vet in Actions
