@@ -1,0 +1,16 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/scenario/v1",
+  "case_id": "unknown-nondeterministic-source",
+  "class": "unknown",
+  "variant": "none",
+  "inputs": {},
+  "observable_state": ["counter"],
+  "initial_state": {"counter": {"type": "int", "int": 0}},
+  "expected_state": {"counter": {"type": "int", "int": 0}},
+  "declared_trace": [],
+  "allowed_effects": [],
+  "bounds": {"max_steps": 8, "max_events": 4},
+  "normalization": {"value_encoding": "typed-json", "state_order": "declared", "event_fields": ["ordinal", "effect", "subject", "value"], "digest": "sha256-canonical-json"},
+  "operations": [{"op": "nondeterministic"}],
+  "result": {"kind": "literal", "value": {"type": "int", "int": 0}}
+}

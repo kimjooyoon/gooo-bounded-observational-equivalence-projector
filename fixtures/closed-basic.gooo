@@ -1,0 +1,22 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/scenario/v1",
+  "case_id": "closed-basic",
+  "class": "normal",
+  "variant": "none",
+  "inputs": {"seed": {"type": "int", "int": 4}},
+  "observable_state": ["counter", "mode"],
+  "initial_state": {"counter": {"type": "int", "int": 0}, "mode": {"type": "string", "string": "cold"}},
+  "expected_state": {"counter": {"type": "int", "int": 4}, "mode": {"type": "string", "string": "ready"}},
+  "declared_trace": [
+    {"effect": "state.write", "subject": "counter", "value": {"type": "int", "int": 4}},
+    {"effect": "state.write", "subject": "mode", "value": {"type": "string", "string": "ready"}}
+  ],
+  "allowed_effects": ["state.write"],
+  "bounds": {"max_steps": 8, "max_events": 4},
+  "normalization": {"value_encoding": "typed-json", "state_order": "declared", "event_fields": ["ordinal", "effect", "subject", "value"], "digest": "sha256-canonical-json"},
+  "operations": [
+    {"op": "set_state", "field": "counter", "value": {"kind": "input", "name": "seed"}},
+    {"op": "set_state", "field": "mode", "value": {"kind": "literal", "value": {"type": "string", "string": "ready"}}}
+  ],
+  "result": {"kind": "state", "name": "counter"}
+}

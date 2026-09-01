@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Go 1.27
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+      - name: Check formatting
+        run: |
+          set -euo pipefail
+          files="$(git ls-files '*.go')"
+          test -z "$(gofmt -l $files)"
+      - name: Run Go tests in Actions
+        run: go test ./...
+      - name: Run Go vet in Actions
+        run: go vet ./...
+      - name: Execute bounded corpus conformance
+        id: conformance
+        continue-on-error: true
+        env:
+          EVIDENCE_DIR: ${{ runner.temp }}/gooo-bounded-evidence
+        run: bash scripts/ci-conformance.sh
+      - name: Upload fixed conformance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-bounded-observational-equivalence-evidence
+          path: ${{ runner.temp }}/gooo-bounded-evidence
+          if-no-files-found: error
+      - name: Require conformance success
+        if: always()
+        run: test "${{ steps.conformance.outcome }}" = success
