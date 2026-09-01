@@ -11,6 +11,6 @@
     {"id": "refuted-value-mismatch", "program": "fixtures/refuted-value-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "value-divergence", "replay": false},
     {"id": "refuted-event-mismatch", "program": "fixtures/refuted-event-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "event-divergence", "replay": false},
     {"id": "refuted-forbidden-effect", "program": "fixtures/refuted-forbidden-effect.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "none", "replay": false},
-    {"id": "refuted-effect-mismatch", "program": "fixtures/refuted-event-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "effect-divergence", "replay": false}
+    {"id": "refuted-effect-mismatch", "program": "fixtures/refuted-effect-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "effect-divergence", "replay": false}
   ]
 }
