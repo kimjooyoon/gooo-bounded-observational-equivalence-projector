@@ -1,0 +1,16 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/corpus/v1",
+  "cases": [
+    {"id": "closed-basic", "program": "fixtures/closed-basic.gooo", "class": "normal", "expected_status": "CLOSED", "variant": "none", "replay": false},
+    {"id": "closed-ordered-effects", "program": "fixtures/closed-ordered-effects.gooo", "class": "normal", "expected_status": "CLOSED", "variant": "none", "replay": true},
+    {"id": "closed-input-state", "program": "fixtures/closed-input-state.gooo", "class": "normal", "expected_status": "CLOSED", "variant": "none", "replay": false},
+    {"id": "unknown-unsupported-effect", "program": "fixtures/unknown-unsupported-effect.gooo", "class": "unknown", "expected_status": "UNKNOWN", "variant": "none", "replay": false},
+    {"id": "unknown-nondeterministic-source", "program": "fixtures/unknown-nondeterministic-source.gooo", "class": "unknown", "expected_status": "UNKNOWN", "variant": "none", "replay": false},
+    {"id": "unknown-bound-exhaustion", "program": "fixtures/unknown-bound-exhaustion.gooo", "class": "unknown", "expected_status": "UNKNOWN", "variant": "none", "replay": false},
+    {"id": "unknown-missing-trace", "program": "fixtures/unknown-missing-trace.gooo", "class": "unknown", "expected_status": "UNKNOWN", "variant": "missing-trace", "replay": false},
+    {"id": "refuted-value-mismatch", "program": "fixtures/refuted-value-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "value-divergence", "replay": false},
+    {"id": "refuted-event-mismatch", "program": "fixtures/refuted-event-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "event-divergence", "replay": false},
+    {"id": "refuted-forbidden-effect", "program": "fixtures/refuted-forbidden-effect.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "none", "replay": false},
+    {"id": "refuted-effect-mismatch", "program": "fixtures/refuted-effect-mismatch.gooo", "class": "refuted", "expected_status": "REFUTED", "variant": "effect-divergence", "replay": false}
+  ]
+}

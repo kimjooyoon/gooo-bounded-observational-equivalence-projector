@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Go 1.27
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+      - name: Normalize Go sources in a transient copy
+        run: |
+          set -euo pipefail
+          transient="$RUNNER_TEMP/normalized-source"
+          normalized="$RUNNER_TEMP/normalized-artifact"
+          mkdir -p "$transient" "$normalized"
+          : > "$normalized/patch.diff"
+          while IFS= read -r file; do
+            mkdir -p "$transient/$(dirname "$file")" "$normalized/$(dirname "$file")"
+            cp "$GITHUB_WORKSPACE/$file" "$transient/$file"
+            gofmt -w "$transient/$file"
+            cp "$transient/$file" "$normalized/$file"
+            if ! cmp -s "$GITHUB_WORKSPACE/$file" "$transient/$file"; then
+              git diff --no-index -- "$GITHUB_WORKSPACE/$file" "$transient/$file" >> "$normalized/patch.diff" || true
+            fi
+          done < <(git ls-files '*.go')
+      - name: Upload normalized sources and patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-normalized-sources
+          path: ${{ runner.temp }}/normalized-artifact
+          if-no-files-found: error
+
+  verify:
+    needs: format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Go 1.27
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+      - name: Check formatting
+        run: |
+          set -euo pipefail
+          files="$(git ls-files '*.go')"
+          test -z "$(gofmt -l $files)"
+      - name: Run Go tests in Actions
+        run: go test ./...
+      - name: Run Go vet in Actions
+        run: go vet ./...
+      - name: Execute bounded corpus conformance
+        id: conformance
+        continue-on-error: true
+        env:
+          EVIDENCE_DIR: ${{ runner.temp }}/gooo-bounded-evidence
+        run: bash scripts/ci-conformance.sh
+      - name: Upload fixed conformance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-bounded-observational-equivalence-evidence
+          path: ${{ runner.temp }}/gooo-bounded-evidence
+          if-no-files-found: error
+      - name: Require conformance success
+        if: always()
+        run: test "${{ steps.conformance.outcome }}" = success

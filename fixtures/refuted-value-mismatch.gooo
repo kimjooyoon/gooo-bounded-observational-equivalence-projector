@@ -1,0 +1,16 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/scenario/v1",
+  "case_id": "refuted-value-mismatch",
+  "class": "refuted",
+  "variant": "value-divergence",
+  "inputs": {"seed": {"type": "int", "int": 7}},
+  "observable_state": ["counter"],
+  "initial_state": {"counter": {"type": "int", "int": 0}},
+  "expected_state": {"counter": {"type": "int", "int": 7}},
+  "declared_trace": [{"effect": "state.write", "subject": "counter", "value": {"type": "int", "int": 7}}],
+  "allowed_effects": ["state.write"],
+  "bounds": {"max_steps": 8, "max_events": 4},
+  "normalization": {"value_encoding": "typed-json", "state_order": "declared", "event_fields": ["ordinal", "effect", "subject", "value"], "digest": "sha256-canonical-json"},
+  "operations": [{"op": "set_state", "field": "counter", "value": {"kind": "input", "name": "seed"}}],
+  "result": {"kind": "state", "name": "counter"}
+}

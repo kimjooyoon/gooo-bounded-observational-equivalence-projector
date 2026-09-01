@@ -1,0 +1,20 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/scenario/v1",
+  "case_id": "closed-input-state",
+  "class": "normal",
+  "variant": "none",
+  "inputs": {"enabled": {"type": "bool", "bool": true}},
+  "observable_state": ["mode"],
+  "initial_state": {"mode": {"type": "string", "string": "off"}},
+  "expected_state": {"mode": {"type": "string", "string": "on"}},
+  "declared_trace": [
+    {"effect": "state.write", "subject": "mode", "value": {"type": "string", "string": "on"}}
+  ],
+  "allowed_effects": ["state.write"],
+  "bounds": {"max_steps": 8, "max_events": 4},
+  "normalization": {"value_encoding": "typed-json", "state_order": "declared", "event_fields": ["ordinal", "effect", "subject", "value"], "digest": "sha256-canonical-json"},
+  "operations": [
+    {"op": "set_state", "field": "mode", "value": {"kind": "literal", "value": {"type": "string", "string": "on"}}}
+  ],
+  "result": {"kind": "input", "name": "enabled"}
+}
