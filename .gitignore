@@ -1,3 +1,4 @@
 .ci-generated/
+.ci-generated.*
 .ci-evidence/
 dist/
