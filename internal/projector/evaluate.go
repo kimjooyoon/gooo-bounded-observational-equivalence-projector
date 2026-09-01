@@ -96,7 +96,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 		switch operation.Op {
 		case "set_state":
 			if issue := requireAllowedEffect(scenario, "state.write", index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 			value, err := evalExpr(operation.Value, state, scenario.Inputs)
 			if err != nil {
@@ -108,11 +108,11 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 			}
 			state[operation.Field] = value
 			if issue := appendEvent(&outcome, scenario, "state.write", operation.Field, value, index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 		case "add_state":
 			if issue := requireAllowedEffect(scenario, "state.write", index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 			current := state[operation.Field]
 			if current.Type != "int" || current.Int == nil {
@@ -121,18 +121,18 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 			changed := *current.Int + operation.Delta
 			state[operation.Field] = IntValue(changed)
 			if issue := appendEvent(&outcome, scenario, "state.write", operation.Field, IntValue(changed), index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 		case "emit":
 			if issue := requireAllowedEffect(scenario, operation.Effect, index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 			value, err := evalExpr(operation.Value, state, scenario.Inputs)
 			if err != nil {
 				return refutedOutcome(outcome, state, scenario, Witness{Kind: "invalid-value", Stage: "evaluate", Step: "event-transition", Item: fmt.Sprintf("operation_index=%d", index), Reason: err.Error()})
 			}
 			if issue := appendEvent(&outcome, scenario, operation.Effect, "", value, index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 		case "repeat":
 			if len(outcome.Trace)+operation.Count > scenario.Bounds.MaxEvents {
@@ -144,7 +144,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 				})
 			}
 			if issue := requireAllowedEffect(scenario, operation.Effect, index); issue != nil {
-				return refutedOutcome(outcome, state, scenario, issue)
+				return refutedOutcome(outcome, state, scenario, *issue)
 			}
 			value, err := evalExpr(operation.Value, state, scenario.Inputs)
 			if err != nil {
@@ -152,7 +152,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 			}
 			for repeat := 0; repeat < operation.Count; repeat++ {
 				if issue := appendEvent(&outcome, scenario, operation.Effect, "", value, index); issue != nil {
-					return refutedOutcome(outcome, state, scenario, issue)
+					return refutedOutcome(outcome, state, scenario, *issue)
 				}
 			}
 		}
@@ -231,10 +231,10 @@ func unknownOutcome(outcome Outcome, state map[string]Value, scenario Scenario, 
 	return outcome
 }
 
-func refutedOutcome(outcome Outcome, state map[string]Value, scenario Scenario, witness *Witness) Outcome {
+func refutedOutcome(outcome Outcome, state map[string]Value, scenario Scenario, witness Witness) Outcome {
 	outcome.Status = StatusRefuted
 	outcome.Reason = witness.Reason
-	outcome.Witnesses = append(outcome.Witnesses, *witness)
+	outcome.Witnesses = append(outcome.Witnesses, witness)
 	outcome.State = orderedState(scenario.ObservableState, state)
 	outcome.TraceAvailable = true
 	outcome.Deterministic = true
