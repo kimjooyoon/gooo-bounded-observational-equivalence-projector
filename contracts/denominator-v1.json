@@ -1,0 +1,26 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/denominator/v1",
+  "authority": "metacode",
+  "contract_id": "bounded-observational-equivalence-v1",
+  "status_precedence": ["REFUTED", "UNKNOWN", "CLOSED"],
+  "proof_families": {
+    "FOUNDATION": ["F01_SOURCE_OWNERSHIP", "F02_SCENARIO_INPUTS", "F03_OBSERVABLE_STATE", "F04_NORMALIZATION_POLICY"],
+    "COHERENCE": ["C01_SEMANTIC_TRACE", "C02_GENERATED_TRACE", "C03_VECTOR_COMPARISON", "C04_STATUS_PRECEDENCE"],
+    "REGRESSION": ["R01_BOUND_ENFORCEMENT", "R02_EFFECT_VOCABULARY", "R03_DETERMINISM_REPLAY", "R04_ARTIFACT_MATERIALIZATION"]
+  },
+  "invariants": [
+    {"id": "F01_SOURCE_OWNERSHIP", "proof_family": "FOUNDATION", "vector": "DRIVER", "statement": ".gooo owns scenario meaning and state transitions"},
+    {"id": "F02_SCENARIO_INPUTS", "proof_family": "FOUNDATION", "vector": "DRIVER", "statement": "only declared bounded scenario inputs are evaluated"},
+    {"id": "F03_OBSERVABLE_STATE", "proof_family": "FOUNDATION", "vector": "OUTCOME", "statement": "only declared observable state is included in the value vector"},
+    {"id": "F04_NORMALIZATION_POLICY", "proof_family": "FOUNDATION", "vector": "GUARDRAIL", "statement": "canonical value, state, event, effect, and digest encodings are fixed"},
+    {"id": "C01_SEMANTIC_TRACE", "proof_family": "COHERENCE", "vector": "DRIVER", "statement": "the reference evaluator emits a complete ordered trace or an explained UNKNOWN"},
+    {"id": "C02_GENERATED_TRACE", "proof_family": "COHERENCE", "vector": "OUTCOME", "statement": "the generated Go binary emits the same canonical trace shape"},
+    {"id": "C03_VECTOR_COMPARISON", "proof_family": "COHERENCE", "vector": "GUARDRAIL", "statement": "value, event, effect, and determinism vectors are compared item by item"},
+    {"id": "C04_STATUS_PRECEDENCE", "proof_family": "COHERENCE", "vector": "DRIVER", "statement": "REFUTED outranks UNKNOWN, which outranks CLOSED"},
+    {"id": "R01_BOUND_ENFORCEMENT", "proof_family": "REGRESSION", "vector": "OUTCOME", "statement": "step and event bounds exhaust to UNKNOWN with a witness"},
+    {"id": "R02_EFFECT_VOCABULARY", "proof_family": "REGRESSION", "vector": "GUARDRAIL", "statement": "forbidden effects are REFUTED with a witness"},
+    {"id": "R03_DETERMINISM_REPLAY", "proof_family": "REGRESSION", "vector": "OUTCOME", "statement": "determinism is established by vectors and replay, never by hash alone"},
+    {"id": "R04_ARTIFACT_MATERIALIZATION", "proof_family": "REGRESSION", "vector": "GUARDRAIL", "statement": "both traces, normalized comparison, witnesses, and report are fixed artifacts"}
+  ],
+  "proof_distribution": {"FOUNDATION": 4, "COHERENCE": 4, "REGRESSION": 4, "DRIVER": 4, "OUTCOME": 4, "GUARDRAIL": 4}
+}

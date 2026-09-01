@@ -1,0 +1,25 @@
+{
+  "schema": "gooo.bounded-observational-equivalence/semantics/v1",
+  "authority": "metacode",
+  "language": "Gooo",
+  "version": "0.1.0",
+  "value_types": ["int", "bool", "string"],
+  "operations": ["set_state", "add_state", "emit", "result", "unsupported_effect", "nondeterministic", "repeat"],
+  "effects": ["state.write", "event.emit", "audit.record"],
+  "comparison_vectors": ["value", "event", "effect", "determinism"],
+  "status_precedence": ["REFUTED", "UNKNOWN", "CLOSED"],
+  "unknown_fields": ["stage", "step", "reason", "unknown_class", "next_operation", "blocked_by"],
+  "default_bounds": {"max_steps": 8, "max_events": 4},
+  "normalization": {
+    "value_encoding": "typed-json",
+    "state_order": "declared",
+    "event_fields": ["ordinal", "effect", "subject", "value"],
+    "digest": "sha256-canonical-json"
+  },
+  "runtime_contract": {
+    "repository_writes": 0,
+    "local_test_executions": 0,
+    "cross_project_required_gates": 0,
+    "output_boundary": "caller-owned-output-or-temp-only"
+  }
+}
