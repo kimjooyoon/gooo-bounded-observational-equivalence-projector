@@ -25,26 +25,26 @@ const (
 type Status string
 
 type Semantics struct {
-	Schema                 string            `json:"schema"`
-	Authority              string            `json:"authority"`
-	Language               string            `json:"language"`
-	Version                string            `json:"version"`
-	ValueTypes             []string          `json:"value_types"`
-	Operations             []string          `json:"operations"`
-	Effects                []string          `json:"effects"`
-	ComparisonVectors      []string          `json:"comparison_vectors"`
-	StatusPrecedence       []Status          `json:"status_precedence"`
-	UnknownFields          []string          `json:"unknown_fields"`
-	DefaultBounds          Bounds            `json:"default_bounds"`
-	Normalization           Normalization     `json:"normalization"`
-	RuntimeContract        RuntimeContract   `json:"runtime_contract"`
+	Schema            string          `json:"schema"`
+	Authority         string          `json:"authority"`
+	Language          string          `json:"language"`
+	Version           string          `json:"version"`
+	ValueTypes        []string        `json:"value_types"`
+	Operations        []string        `json:"operations"`
+	Effects           []string        `json:"effects"`
+	ComparisonVectors []string        `json:"comparison_vectors"`
+	StatusPrecedence  []Status        `json:"status_precedence"`
+	UnknownFields     []string        `json:"unknown_fields"`
+	DefaultBounds     Bounds          `json:"default_bounds"`
+	Normalization     Normalization   `json:"normalization"`
+	RuntimeContract   RuntimeContract `json:"runtime_contract"`
 }
 
 type RuntimeContract struct {
-	RepositoryWrites       int    `json:"repository_writes"`
-	LocalTestExecutions    int    `json:"local_test_executions"`
-	CrossProjectGates      int    `json:"cross_project_required_gates"`
-	OutputBoundary         string `json:"output_boundary"`
+	RepositoryWrites    int    `json:"repository_writes"`
+	LocalTestExecutions int    `json:"local_test_executions"`
+	CrossProjectGates   int    `json:"cross_project_required_gates"`
+	OutputBoundary      string `json:"output_boundary"`
 }
 
 type Bounds struct {
@@ -60,20 +60,20 @@ type Normalization struct {
 }
 
 type Scenario struct {
-	Schema           string              `json:"schema"`
-	CaseID           string              `json:"case_id"`
-	Class            string              `json:"class"`
-	Variant          string              `json:"variant"`
-	Inputs           map[string]Value    `json:"inputs"`
-	ObservableState  []string            `json:"observable_state"`
-	InitialState     map[string]Value    `json:"initial_state"`
-	ExpectedState    map[string]Value    `json:"expected_state"`
-	DeclaredTrace    []DeclaredEvent     `json:"declared_trace"`
-	AllowedEffects   []string            `json:"allowed_effects"`
-	Bounds           Bounds              `json:"bounds"`
-	Normalization    Normalization       `json:"normalization"`
-	Operations       []Operation         `json:"operations"`
-	Result           Expr                `json:"result"`
+	Schema          string           `json:"schema"`
+	CaseID          string           `json:"case_id"`
+	Class           string           `json:"class"`
+	Variant         string           `json:"variant"`
+	Inputs          map[string]Value `json:"inputs"`
+	ObservableState []string         `json:"observable_state"`
+	InitialState    map[string]Value `json:"initial_state"`
+	ExpectedState   map[string]Value `json:"expected_state"`
+	DeclaredTrace   []DeclaredEvent  `json:"declared_trace"`
+	AllowedEffects  []string         `json:"allowed_effects"`
+	Bounds          Bounds           `json:"bounds"`
+	Normalization   Normalization    `json:"normalization"`
+	Operations      []Operation      `json:"operations"`
+	Result          Expr             `json:"result"`
 }
 
 type Value struct {
@@ -84,18 +84,18 @@ type Value struct {
 }
 
 type Expr struct {
-	Kind  string  `json:"kind"`
-	Name  string  `json:"name,omitempty"`
-	Value *Value  `json:"value,omitempty"`
+	Kind  string `json:"kind"`
+	Name  string `json:"name,omitempty"`
+	Value *Value `json:"value,omitempty"`
 }
 
 type Operation struct {
-	Op       string `json:"op"`
-	Field    string `json:"field,omitempty"`
-	Effect   string `json:"effect,omitempty"`
-	Value    *Expr  `json:"value,omitempty"`
-	Delta    int64  `json:"delta,omitempty"`
-	Count    int    `json:"count,omitempty"`
+	Op     string `json:"op"`
+	Field  string `json:"field,omitempty"`
+	Effect string `json:"effect,omitempty"`
+	Value  *Expr  `json:"value,omitempty"`
+	Delta  int64  `json:"delta,omitempty"`
+	Count  int    `json:"count,omitempty"`
 }
 
 type DeclaredEvent struct {
@@ -105,8 +105,8 @@ type DeclaredEvent struct {
 }
 
 type Corpus struct {
-	Schema string        `json:"schema"`
-	Cases  []CorpusCase  `json:"cases"`
+	Schema string       `json:"schema"`
+	Cases  []CorpusCase `json:"cases"`
 }
 
 type CorpusCase struct {
@@ -161,19 +161,19 @@ type DeterminismCell struct {
 }
 
 type Outcome struct {
-	Schema         string          `json:"schema"`
-	CaseID         string          `json:"case_id"`
-	Status         Status          `json:"status"`
-	Value          *Value          `json:"value,omitempty"`
-	State          []StateCell     `json:"state"`
-	Trace          []Event         `json:"trace"`
-	Effects        []EffectCell    `json:"effects"`
-	TraceAvailable bool            `json:"trace_available"`
-	Deterministic  bool            `json:"deterministic"`
-	Digest         string          `json:"digest"`
-	Reason         string          `json:"reason,omitempty"`
-	Unknown        *UnknownDetail  `json:"unknown,omitempty"`
-	Witnesses      []Witness       `json:"witnesses,omitempty"`
+	Schema         string         `json:"schema"`
+	CaseID         string         `json:"case_id"`
+	Status         Status         `json:"status"`
+	Value          *Value         `json:"value,omitempty"`
+	State          []StateCell    `json:"state"`
+	Trace          []Event        `json:"trace"`
+	Effects        []EffectCell   `json:"effects"`
+	TraceAvailable bool           `json:"trace_available"`
+	Deterministic  bool           `json:"deterministic"`
+	Digest         string         `json:"digest"`
+	Reason         string         `json:"reason,omitempty"`
+	Unknown        *UnknownDetail `json:"unknown,omitempty"`
+	Witnesses      []Witness      `json:"witnesses,omitempty"`
 }
 
 type Normalized struct {
@@ -207,8 +207,8 @@ type Comparison struct {
 	HumanReport       string             `json:"human_report"`
 }
 
-func IntValue(v int64) Value { return Value{Type: "int", Int: &v} }
-func BoolValue(v bool) Value { return Value{Type: "bool", Bool: &v} }
+func IntValue(v int64) Value     { return Value{Type: "int", Int: &v} }
+func BoolValue(v bool) Value     { return Value{Type: "bool", Bool: &v} }
 func StringValue(v string) Value { return Value{Type: "string", String: &v} }
 
 func (v Value) Validate() error {

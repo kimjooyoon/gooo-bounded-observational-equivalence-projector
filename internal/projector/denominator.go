@@ -7,13 +7,13 @@ import (
 )
 
 type Denominator struct {
-	Schema           string                `json:"schema"`
-	Authority        string                `json:"authority"`
-	ContractID       string                `json:"contract_id"`
-	StatusPrecedence []Status              `json:"status_precedence"`
-	ProofFamilies    map[string][]string   `json:"proof_families"`
-	Invariants       []Invariant           `json:"invariants"`
-	ProofDistribution map[string]int       `json:"proof_distribution"`
+	Schema            string              `json:"schema"`
+	Authority         string              `json:"authority"`
+	ContractID        string              `json:"contract_id"`
+	StatusPrecedence  []Status            `json:"status_precedence"`
+	ProofFamilies     map[string][]string `json:"proof_families"`
+	Invariants        []Invariant         `json:"invariants"`
+	ProofDistribution map[string]int      `json:"proof_distribution"`
 }
 
 type Invariant struct {

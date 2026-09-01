@@ -71,7 +71,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 		if steps+cost > scenario.Bounds.MaxSteps {
 			return unknownOutcome(outcome, state, scenario, UnknownDetail{
 				Stage: "evaluate", Step: "bound-enforcement",
-				Reason: fmt.Sprintf("operation %d would consume %d steps beyond max_steps=%d", index, cost, scenario.Bounds.MaxSteps),
+				Reason:       fmt.Sprintf("operation %d would consume %d steps beyond max_steps=%d", index, cost, scenario.Bounds.MaxSteps),
 				UnknownClass: "BOUND_EXHAUSTION", NextOperation: "raise the declared bound or reduce the scenario",
 				BlockedBy: []string{fmt.Sprintf("operation_index=%d", index), fmt.Sprintf("max_steps=%d", scenario.Bounds.MaxSteps)},
 			})
@@ -79,7 +79,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 		if operation.Op == "unsupported_effect" {
 			return unknownOutcome(outcome, state, scenario, UnknownDetail{
 				Stage: "evaluate", Step: "effect-vocabulary",
-				Reason: fmt.Sprintf("effect %q is outside the supported semantic effect vocabulary", operation.Effect),
+				Reason:       fmt.Sprintf("effect %q is outside the supported semantic effect vocabulary", operation.Effect),
 				UnknownClass: "UNSUPPORTED_EFFECT", NextOperation: "declare the effect vocabulary and its observation rule",
 				BlockedBy: []string{operation.Effect},
 			})
@@ -87,7 +87,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 		if operation.Op == "nondeterministic" {
 			return unknownOutcome(outcome, state, scenario, UnknownDetail{
 				Stage: "evaluate", Step: "determinism-source",
-				Reason: "the scenario declares a nondeterministic source, so one bounded replay is not a proof",
+				Reason:       "the scenario declares a nondeterministic source, so one bounded replay is not a proof",
 				UnknownClass: "NONDETERMINISTIC_SOURCE", NextOperation: "replace the source with a declared deterministic input",
 				BlockedBy: []string{fmt.Sprintf("operation_index=%d", index)},
 			})
@@ -138,7 +138,7 @@ func execute(scenario Scenario, semantics Semantics, variant string) Outcome {
 			if len(outcome.Trace)+operation.Count > scenario.Bounds.MaxEvents {
 				return unknownOutcome(outcome, state, scenario, UnknownDetail{
 					Stage: "evaluate", Step: "bound-enforcement",
-					Reason: fmt.Sprintf("operation %d would consume events beyond max_events=%d", index, scenario.Bounds.MaxEvents),
+					Reason:       fmt.Sprintf("operation %d would consume events beyond max_events=%d", index, scenario.Bounds.MaxEvents),
 					UnknownClass: "BOUND_EXHAUSTION", NextOperation: "raise the declared event bound or reduce repetitions",
 					BlockedBy: []string{fmt.Sprintf("operation_index=%d", index), fmt.Sprintf("max_events=%d", scenario.Bounds.MaxEvents)},
 				})
