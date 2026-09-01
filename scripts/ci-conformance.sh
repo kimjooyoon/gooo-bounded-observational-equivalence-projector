@@ -43,7 +43,7 @@ unknown_count="$(jq '[.cases[] | select(.class == "unknown")] | length' "$corpus
 refuted_count="$(jq '[.cases[] | select(.class == "refuted")] | length' "$corpus")"
 unknown_verdicts="$(jq -s '[.[] | select(.verdict == "UNKNOWN")] | length' "$evidence_root"/cases/*/normalized-comparison.json)"
 failed_verdicts="$(jq -s '[.[] | select(.verdict != "CLOSED" and .verdict != "UNKNOWN" and .verdict != "REFUTED")] | length' "$evidence_root"/cases/*/normalized-comparison.json)"
-vector_cells="$(jq -s '[.[] | .normalized_comparison[] | {fixture: input_filename, vector: .vector, state: .state, reason: .reason}]' "$evidence_root"/cases/*/normalized-comparison.json)"
+vector_cells="$(jq -s '[.[] | .normalized_comparison[] | {fixture: .case_id, vector: .vector, state: .state, reason: .reason}]' "$evidence_root"/cases/*/normalized-comparison.json)"
 go_files="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.go' -type f -print | wc -l | tr -d ' ')"
 gooo_files="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.gooo' -type f -print | wc -l | tr -d ' ')"
 go_lines="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.go' -type f -print0 | xargs -0 awk 'END {print NR + 0}')"
