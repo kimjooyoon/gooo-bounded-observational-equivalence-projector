@@ -32,6 +32,7 @@ while IFS=$'\t' read -r case_id program variant expected replay; do
     jq -n --arg case_id "$case_id" --arg digest "sha256:$digest" '{schema:"gooo.bounded-observational-equivalence/replay/v1",case_id:$case_id,byte_identical:true,output_digest:$digest}' > "$case_root/replay.json"
   fi
 done < <(jq -r '.cases[] | [.id,.program,.variant,.expected_status,(.replay|tostring)] | @tsv' "$corpus")
+echo "checkpoint=cases-complete"
 
 cp "$semantics" "$evidence_root/semantics.gooo"
 cp "$corpus" "$evidence_root/corpus.gooo"
@@ -44,10 +45,12 @@ refuted_count="$(jq '[.cases[] | select(.class == "refuted")] | length' "$corpus
 unknown_verdicts="$(jq -s '[.[] | select(.verdict == "UNKNOWN")] | length' "$evidence_root"/cases/*/normalized-comparison.json)"
 failed_verdicts="$(jq -s '[.[] | select(.verdict != "CLOSED" and .verdict != "UNKNOWN" and .verdict != "REFUTED")] | length' "$evidence_root"/cases/*/normalized-comparison.json)"
 vector_cells="$(jq -s '[.[] | .normalized_comparison[] | {fixture: .case_id, vector: .vector, state: .state, reason: .reason}]' "$evidence_root"/cases/*/normalized-comparison.json)"
+echo "checkpoint=case-counts-and-vectors"
 go_files="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.go' -type f -print | wc -l | tr -d ' ')"
 gooo_files="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.gooo' -type f -print | wc -l | tr -d ' ')"
 go_lines="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.go' -type f -print0 | xargs -0 awk 'END {print NR + 0}')"
 gooo_lines="$(find "$repo_root" -path '*/.git' -prune -o -path '*/.ci-generated.*' -prune -o -name '*.gooo' -type f -print0 | xargs -0 awk 'END {print NR + 0}')"
+echo "checkpoint=inventory"
 
 jq -n \
   --arg schema "gooo.bounded-observational-equivalence/evidence/v1" \
@@ -66,6 +69,7 @@ jq -n \
   --argjson go_lines "$go_lines" \
   --argjson gooo_lines "$gooo_lines" \
   '{schema:$schema,authority:"github-actions",commit_sha:$commit,workflow:$workflow,run_id:$run,toolchain:{go:"1.27.x",target:"go1.27"},status_precedence:["REFUTED","UNKNOWN","CLOSED"],corpus:{total:$case_count,normal:$normal_count,unknown:$unknown_count,refuted:$refuted_count},test_counts:{total:$case_count,selected:$case_count,executed:$case_count,reused:0,failed:$failed_verdicts,unknown:$unknown_verdicts},vector_cells:$vector_cells,denominator:{foundation:4,coherence:4,regression:4,driver:4,outcome:4,guardrail:4},runtime_contract:{repository_writes:0,local_test_executions:0,cross_project_required_gates:0},inventory:{go_files:$go_files,gooo_files:$gooo_files,go_physical_lines:$go_lines,gooo_physical_lines:$gooo_lines},improvement:{status:"UNKNOWN",before:null,after:null,reason:"exact same scenario/source/contract/fixture/toolchain/runner integer before-after evidence is absent"},local_validation_command_count:0}' > "$evidence_root/evidence.json"
+echo "checkpoint=evidence-written"
 
 if [[ -n "$(git -C "$repo_root" status --porcelain)" ]]; then
   echo "tracked repository changed during conformance" >&2
